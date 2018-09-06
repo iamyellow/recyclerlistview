@@ -3,6 +3,8 @@ import { LayoutChangeEvent, View, ViewProperties } from "react-native";
 import { Dimension } from "../../../core/dependencies/LayoutProvider";
 import BaseViewRenderer, { ViewRendererProps } from "../../../core/viewrenderer/BaseViewRenderer";
 
+import TSCast from "../../../utils/TSCast";
+
 /***
  * View renderer is responsible for creating a container of size provided by LayoutProvider and render content inside it.
  * Also enforces a logic to prevent re renders. RecyclerListView keeps moving these ViewRendereres around using transforms to enable recycling.
@@ -10,11 +12,16 @@ import BaseViewRenderer, { ViewRendererProps } from "../../../core/viewrenderer/
  * This is second of the two things recycler works on. Implemented both for web and react native.
  */
 export default class ViewRenderer extends BaseViewRenderer<any> {
+    public static defaultProps = {
+      externalRowHolder: TSCast.cast(View),
+    };
+
     private _dim: Dimension = { width: 0, height: 0 };
     private _viewRef: React.Component<ViewProperties, React.ComponentState> | null = null;
     public render(): JSX.Element {
+        const RowHolder = TSCast.cast<View>(this.props.externalRowHolder);
         return this.props.forceNonDeterministicRendering ? (
-            <View ref={this._setRef}
+            <RowHolder ref={this._setRef}
             onLayout={this._onLayout}
                 style={{
                     flexDirection: this.props.isHorizontal ? "column" : "row",
@@ -25,9 +32,9 @@ export default class ViewRenderer extends BaseViewRenderer<any> {
                     ...this.animatorStyleOverrides,
                 }}>
                 {this.renderChild()}
-            </View>
+            </RowHolder>
         ) : (
-                <View ref={this._setRef}
+                <RowHolder ref={this._setRef}
                     style={{
                         left: this.props.x,
                         position: "absolute",
@@ -38,7 +45,7 @@ export default class ViewRenderer extends BaseViewRenderer<any> {
                         ...this.animatorStyleOverrides,
                     }}>
                     {this.renderChild()}
-                </View>
+                </RowHolder>
             );
     }
 

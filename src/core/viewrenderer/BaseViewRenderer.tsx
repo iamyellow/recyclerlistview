@@ -26,6 +26,7 @@ export interface ViewRendererProps<T> {
     isHorizontal?: boolean;
     extendedState?: object;
     layoutProvider?: BaseLayoutProvider;
+    externalRowHolder?: { new(props: object): React.ComponentClass<{}> };
 }
 export default abstract class BaseViewRenderer<T> extends React.Component<ViewRendererProps<T>, {}> {
     protected animatorStyleOverrides: object | undefined;

@@ -92,6 +92,7 @@ export interface RecyclerListViewProps {
     onVisibleIndexesChanged?: TOnItemStatusChanged;
     renderFooter?: () => JSX.Element | JSX.Element[] | null;
     externalScrollView?: { new(props: ScrollViewDefaultProps): BaseScrollView };
+    externalRowHolder?: { new(props: object): React.ComponentClass<{}> };
     initialOffset?: number;
     initialRenderIndex?: number;
     scrollThrottle?: number;
@@ -491,6 +492,7 @@ export default class RecyclerListView<P extends RecyclerListViewProps, S extends
                     forceNonDeterministicRendering={this.props.forceNonDeterministicRendering}
                     isHorizontal={this.props.isHorizontal}
                     onSizeChanged={this._onViewContainerSizeChange}
+                    externalRowHolder={this.props.externalRowHolder}
                     childRenderer={this.props.rowRenderer}
                     height={itemRect.height}
                     width={itemRect.width}
@@ -595,6 +597,9 @@ RecyclerListView.propTypes = {
     // scrollEvent = { nativeEvent: { contentOffset: { x: offset, y: offset } } }
     //Note: Please extend BaseScrollView to achieve expected behaviour
     externalScrollView: PropTypes.func,
+
+    //Provide your own Component for the row holder (aka the component to be renderer returned by the `rowRenderer` method).
+    externalRowHolder: PropTypes.func,
 
     //Callback given when user scrolls to the end of the list or footer just becomes visible, useful in incremental loading scenarios
     onEndReached: PropTypes.func,

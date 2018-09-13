@@ -220,6 +220,7 @@ export default class VirtualRenderer {
                         delete this._stableIdToRenderKeyMap[getStableId(oldIndex)];
                     }
                 } else {
+                    key = getStableId(index);
                     renderStack[key] = { dataIndex: index };
                 }
             } else {
